@@ -24,6 +24,11 @@ You can run PointNet or PointNet++ on ModelNet40 cls task.
  
 * use `--model pointnet++` or `--model pointnet`
 
+Training
+
+```shell
+python ./train.py --dataset_path <ModelNet40 path> --batchSize <batchsize> --nepoch <epoch_num>
+```
 
 
 ### Performance
