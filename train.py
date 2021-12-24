@@ -9,6 +9,9 @@ from tqdm import tqdm
 import argparse
 import torch.optim as optim
 import torch.nn as nn
+from models.DGCNN import DGCNN
+from models.PointCNN import PointConvDensityClsSsg
+from models.Pct import Pct
 import os
 
 def correct_and_accuracy(label,net_output):
@@ -42,6 +45,15 @@ def train(opt):
     elif opt.model=='pointnet':
         net=PointNet_cls(cls=40,normal_channel=False,transform=opt.feature_transform)
         save_net_file = 'PointNet.pkl'
+    elif opt.model=='dgcnn':
+        net=DGCNN(cls=40,normal_channel=False)
+        save_net_file = 'DGCNN.pkl'
+    elif opt.model == 'pointcnn':
+        net = PointConvDensityClsSsg(cls=40)
+        save_net_file = 'pointcnn.pkl'
+    elif opt.model == 'pct':
+        net = Pct(40)
+        save_net_file = 'pct.pkl'
     else:
         raise TypeError
     optimizer=optim.Adam(net.parameters(),lr=0.003)
@@ -66,7 +78,10 @@ def train(opt):
             data = data.transpose(2,1)
             data = data.to(device)
             label = label.to(device)
-            pred,trans_mat=net(data)
+            if opt.model=='dgcnn' or opt.model=='pointcnn' or opt.model == 'pct':
+                pred= net(data)
+            else:
+                pred,trans_mat=net(data)
             cls_loss=cls_loss_fun(pred,label)
             if opt.feature_transform:
                 tran_loss=feature_transform_reguliarzer(trans_mat[0])+feature_transform_reguliarzer(trans_mat[1])
@@ -102,7 +117,10 @@ def train(opt):
             data = data.transpose(2, 1)
             data = data.to(device)
             label = label.to(device)
-            pred, trans_mat = net(data)
+            if opt.model == 'dgcnn' or opt.model=='pointcnn':
+                pred = net(data)
+            else:
+                pred, trans_mat = net(data)
             cls_loss = cls_loss_fun(pred, label)
             if opt.feature_transform:
                 tran_loss = feature_transform_reguliarzer(trans_mat[0]) + feature_transform_reguliarzer(trans_mat[1])
@@ -131,7 +149,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--workers', type=int, help='number of data loading workers', default=6)
     parser.add_argument(
-        '--nepoch', type=int, default=30, help='number of epochs to train for')
+        '--nepoch', type=int, default=60, help='number of epochs to train for')
     parser.add_argument('--dataset_path', type=str, default='/home/poley/Work_Space/Dataset/modelnet40_normal_resampled',
                         help='path of ModelNet40 data')
     parser.add_argument('--record_folder', type=str, default='./records', help='output folder of train record')
@@ -139,7 +157,7 @@ if __name__ == '__main__':
     parser.add_argument('--feature_transform', action='store_true', help="do not use feature transform")
     parser.add_argument('--show_status_interval', type=int, default='30',
                         help="interval of showing status during training ")
-    parser.add_argument('--model', type=str, default='pointnet++',
+    parser.add_argument('--model', type=str, default='pct',
                         help="choose the model")
     parser.add_argument('--ind', type=int, default=0,
                         help="index of running for record")

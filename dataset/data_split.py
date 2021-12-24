@@ -8,7 +8,7 @@ def ModelNet40_data_split(data_path, division_ratio=np.array([0.8, 0.1, 0.1])):
     """
     split ModelNet40 data
 
-    :param path: ModelNet40 root
+    :param data_path: ModelNet40 root
     :param division_ratio: split ratio [training set，val set，test set]
     :return:
     """

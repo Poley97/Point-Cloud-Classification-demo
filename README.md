@@ -1,6 +1,6 @@
-# PointNet and PointNet++ cls on ModelNet40  
+# ModelNet40 cls demo
 
-This repo is  a unofficial implementation for PointNet and PointNet++ classification on ModelNet40
+This repo is  a unofficial implementations for classification on ModelNet40
 
 ## Install
 The latest codes are tested on CUDA10.1, PyTorch 1.6 and Python 3.7:
@@ -27,10 +27,15 @@ You can run PointNet or PointNet++ on ModelNet40 cls task.
 Training
 
 ```shell
-python ./train.py --dataset_path <ModelNet40 path> --batchSize <batchsize> --nepoch <epoch_num>
+python ./train.py --model <model_name> --dataset_path <ModelNet40 path> --batchSize <batchsize> --nepoch <epoch_num>
 ```
 
-
+### Support Models
+- [x] PointNet
+- [x] PointNet++
+- [x] PointCNN
+- [x] DGCNN
+- [x] PCT 
 ### Performance
 Our results are got by 30 epochs training.
 
@@ -42,7 +47,7 @@ Our results are got by 30 epochs training.
 | PointNet2_MSG (Pytorch without normal) |  91.9|
 
 
-## Reference By
+## Reference
 [fxia22/pointnet.pytorch](https://github.com/fxia22/pointnet.pytorch)<br>
 [yanx27/Pointnet_Pointnet2_pytorch](https://github.com/yanx27/Pointnet_Pointnet2_pytorch)<br>
 
